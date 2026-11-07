@@ -6,14 +6,13 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>WebAR — перемещение и масштаб</title>
 <style>
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#151923}#unity-canvas{width:100%;height:100%;display:block}#overlay{position:fixed;inset:0;color:white;background:transparent;touch-action:none}#surface{position:absolute;inset:0;touch-action:none}.heading{position:absolute;top:max(20px,env(safe-area-inset-top));left:20px;right:20px;pointer-events:none;text-shadow:0 1px 6px #000}h1{font-size:22px;margin:0 0 9px}p{font-size:15px;line-height:1.4;margin:0;max-width:540px}.controls{position:absolute;left:16px;right:16px;bottom:max(16px,env(safe-area-inset-bottom));margin:auto;max-width:520px;padding:16px;border-radius:16px;background:#fff;color:#182131;box-shadow:0 3px 22px #0003}button{min-height:46px;border:1px solid #c5ccd5;border-radius:10px;background:#f7f9fc;font-size:16px;padding:10px 16px;cursor:pointer}button:disabled{opacity:.5;cursor:default}#ar{background:#245bd6;color:white;border:none;flex:1}.buttons{display:flex;gap:10px;margin-top:12px}#status{font-size:15px;min-height:21px}#loading{position:absolute;top:45%;width:100%;text-align:center;font-size:20px;pointer-events:none}#error{color:#9b1515}body.ar{background:transparent}@media(max-width:480px){h1{font-size:20px}.heading p{font-size:14px}.controls{padding:12px}button{font-size:15px}}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#151923}#unity-canvas{width:100%;height:100%;display:block}#overlay{position:fixed;inset:0;color:white;background:transparent;touch-action:none}#surface{position:absolute;inset:0;touch-action:none}.controls{position:absolute;left:16px;right:16px;bottom:max(16px,env(safe-area-inset-bottom));margin:auto;max-width:520px;padding:16px;border-radius:16px;background:#fff;color:#182131;box-shadow:0 3px 22px #0003}button{min-height:46px;border:1px solid #c5ccd5;border-radius:10px;background:#f7f9fc;font-size:16px;padding:10px 16px;cursor:pointer}button:disabled{opacity:.5;cursor:default}#ar{background:#245bd6;color:white;border:none;flex:1}.buttons{display:flex;gap:10px;margin-top:12px}#status{font-size:15px;min-height:21px}#loading{position:absolute;top:45%;width:100%;text-align:center;font-size:20px;pointer-events:none}#error{color:#9b1515}body.ar{background:transparent}@media(max-width:480px){.controls{padding:12px}button{font-size:15px}}
 </style>
 </head>
 <body>
 <canvas id="unity-canvas" tabindex="-1"></canvas>
 <div id="overlay">
  <div id="surface"></div>
- <div class="heading"><h1>Объект в ваших руках</h1><p>Потяните куб одним пальцем. Удерживая его, добавьте второй палец и разведите или сведите пальцы.</p></div>
  <div id="loading">Загрузка сцены… <span id="progress">0%</span></div>
  <div class="controls"><div id="status">Готовим сцену…</div><div id="error" role="alert"></div><div class="buttons"><button id="reset" disabled>Передо мной</button><button id="ar" disabled>Начать AR</button></div></div>
 </div>
@@ -53,7 +52,7 @@ reset.addEventListener('click',()=>{cancel();unityInstance.SendMessage('Interact
 ar.addEventListener('click',()=>{document.getElementById('error').textContent='';cancel();if(xrSession)xrSession.end();else unityInstance.Module.WebXR.toggleAR();});
 window.addEventListener('unhandledrejection',e=>{document.getElementById('error').textContent='Не удалось запустить AR: '+e.reason;});
 document.addEventListener('onARSupportedCheck',e=>{supported=e.detail.supported;ar.disabled=!supported||!unityInstance;if(!supported)ar.textContent='AR недоступен';});
-window.addEventListener('pr7state',e=>{const s=e.detail;document.getElementById('status').textContent=(s.selected?'Куб захвачен':s.hovered?'Можно перетащить':'Коснитесь куба')+' · Масштаб '+Math.round(s.scale*100)+'%';});
+window.addEventListener('pr7state',e=>{const s=e.detail;document.getElementById('status').textContent='Масштаб '+Math.round(s.scale*100)+'%';});
 var canvas=document.getElementById('unity-canvas');
 var config={dataUrl:'Build/{{{ DATA_FILENAME }}}',frameworkUrl:'Build/{{{ FRAMEWORK_FILENAME }}}',codeUrl:'Build/{{{ CODE_FILENAME }}}',streamingAssetsUrl:'StreamingAssets',companyName:'MIREA',productName:'WebAR PR7',productVersion:'1.0',autoSyncPersistentDataPath:true};
 {{{ WEBXR_POLYFILL_CONFIG }}}
